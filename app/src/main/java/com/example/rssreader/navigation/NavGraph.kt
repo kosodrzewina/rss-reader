@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 fun NavGraph(navHostController: NavHostController, context: Context, auth: FirebaseAuth) {
     NavHost(navController = navHostController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.LoginScreen.route) {
-            LoginScreen(auth, context)
+            LoginScreen(auth, context, navHostController)
         }
     }
 }
