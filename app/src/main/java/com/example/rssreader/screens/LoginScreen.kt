@@ -1,12 +1,13 @@
 package com.example.rssreader.screens
 
-import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -26,13 +27,19 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.rssreader.FeedActivity
+import com.example.rssreader.MainActivity
 import com.example.rssreader.R
 import com.google.firebase.auth.FirebaseAuth
 
 const val TAG = "LOGIN_SCREEN"
 
 @Composable
-fun LoginScreen(auth: FirebaseAuth, context: Context, navHostController: NavHostController) {
+fun LoginScreen(
+    auth: FirebaseAuth,
+    mainActivity: MainActivity,
+    navHostController: NavHostController
+) {
     var loginValue by remember {
         mutableStateOf("")
     }
@@ -100,44 +107,80 @@ fun LoginScreen(auth: FirebaseAuth, context: Context, navHostController: NavHost
                         .padding(start = 16.dp, end = 16.dp)
                         .fillMaxWidth()
                 )
-                Button(
-                    shape = RoundedCornerShape(16.dp),
-                    enabled = loginValue.isNotEmpty() && passwordValue.isNotEmpty(),
-                    onClick = {
-                        onLogin(
-                            loginValue,
-                            passwordValue,
-                            auth,
-                            context,
-                            navHostController
-                        )
-                    },
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Text(text = "Log in")
+                Row {
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = loginValue.isNotEmpty() && passwordValue.isNotEmpty(),
+                        onClick = {
+                            onRegister(
+                                loginValue,
+                                passwordValue,
+                                auth,
+                                mainActivity,
+                            )
+                        },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(text = "Register")
+                    }
+                    Button(
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = loginValue.isNotEmpty() && passwordValue.isNotEmpty(),
+                        onClick = {
+                            onLogin(
+                                loginValue,
+                                passwordValue,
+                                auth,
+                                mainActivity,
+                            )
+                        },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(text = "Log in")
+                    }
                 }
             }
         }
     }
 }
 
+fun onRegister(
+    login: String,
+    password: String,
+    auth: FirebaseAuth,
+    mainActivity: MainActivity
+) {
+    auth
+        .createUserWithEmailAndPassword(login, password)
+        .addOnSuccessListener {
+            Toast.makeText(mainActivity, "Successful registration", Toast.LENGTH_SHORT).show()
+            goToFeed(mainActivity)
+        }
+        .addOnFailureListener {
+            Toast.makeText(mainActivity, "An error occurred", Toast.LENGTH_SHORT).show()
+            Log.e(TAG, it.toString())
+        }
+}
+
 fun onLogin(
     login: String,
     password: String,
     auth: FirebaseAuth,
-    context: Context,
-    navHostController: NavHostController
+    mainActivity: MainActivity,
 ) {
     auth
         .signInWithEmailAndPassword(login, password)
         .addOnSuccessListener {
-            it.user.let {
-                // TODO: navigate
-            }
-            Toast.makeText(context, "Successful login", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity, "Successful login", Toast.LENGTH_SHORT).show()
+            goToFeed(mainActivity)
         }
         .addOnFailureListener {
-            Toast.makeText(context, "An error occurred", Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity, "An error occurred", Toast.LENGTH_SHORT).show()
             Log.e(TAG, it.toString())
         }
+}
+
+fun goToFeed(mainActivity: MainActivity) {
+    mainActivity.startActivity(Intent(mainActivity, FeedActivity::class.java))
+    mainActivity.finish()
 }
