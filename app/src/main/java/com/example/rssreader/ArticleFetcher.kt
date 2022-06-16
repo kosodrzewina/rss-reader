@@ -1,5 +1,6 @@
 package com.example.rssreader
 
+import androidx.compose.runtime.mutableStateOf
 import com.example.rssreader.dto.DataDto
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers.IO
@@ -32,13 +33,18 @@ object ArticleFetcher {
                             description = it.description!!,
                             linkArticle = it.link!!,
                             linkImage = it.thumbnail!!,
-                            isRead = false
+                            isRead = mutableStateOf(false)
                         )
                     }
 
-            ArticleStore.articles.apply {
-                clear()
-                addAll(articles)
+            articles.forEach { fetchedArticle ->
+                if (
+                    !ArticleStore.articles.any { article ->
+                        article.title == fetchedArticle.title
+                    }
+                ) {
+                    ArticleStore.articles.add(fetchedArticle)
+                }
             }
         }
     }

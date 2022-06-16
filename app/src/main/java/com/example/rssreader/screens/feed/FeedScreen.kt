@@ -7,12 +7,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.rssreader.ArticleStore
 import com.example.rssreader.FeedActivity
 import com.example.rssreader.MainActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
-fun FeedScreen(auth: FirebaseAuth, feedActivity: FeedActivity) {
+fun FeedScreen(auth: FirebaseAuth, database: FirebaseDatabase, feedActivity: FeedActivity) {
     Scaffold(
         scaffoldState = rememberScaffoldState(),
         topBar = {
@@ -28,6 +30,7 @@ fun FeedScreen(auth: FirebaseAuth, feedActivity: FeedActivity) {
                                     MainActivity::class.java
                                 )
                             )
+                            ArticleStore.articles.clear()
                             feedActivity.finish()
                         }
                     ) {
@@ -37,6 +40,10 @@ fun FeedScreen(auth: FirebaseAuth, feedActivity: FeedActivity) {
             )
         }
     ) {
-        ArticleList(modifier = Modifier.padding(top = it.calculateTopPadding()))
+        ArticleList(
+            auth = auth,
+            database = database,
+            modifier = Modifier.padding(top = it.calculateTopPadding())
+        )
     }
 }

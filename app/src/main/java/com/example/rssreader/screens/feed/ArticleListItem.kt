@@ -1,5 +1,6 @@
 package com.example.rssreader.screens.feed
 
+import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +13,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -22,23 +23,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.rssreader.Article
-import com.example.rssreader.ArticleStore
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ArticleListItem(article: Article) {
-    var isRead by remember {
-        mutableStateOf(article.isRead)
-    }
-
+fun ArticleListItem(article: Article, auth: FirebaseAuth, database: FirebaseDatabase) {
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = 8.dp,
         onClick = {
-            article.isRead = true
-            isRead = true
+            article.isRead.value = true
+
+            val encodedUserEmail =
+                Base64.encodeToString(auth.currentUser?.email?.toByteArray(), Base64.NO_WRAP)
+            val encodedTitle = Base64.encodeToString(article.title.toByteArray(), Base64.NO_WRAP)
+            database.getReference(encodedUserEmail).child(encodedTitle)
+                .setValue(article.isRead.value)
         },
-        backgroundColor = if (isRead) Color(0xFFBEBEBE) else Color.White
+        backgroundColor = if (article.isRead.value) Color(0xFFBEBEBE) else Color.White
     ) {
         Row {
             Column {
@@ -54,7 +57,7 @@ fun ArticleListItem(article: Article) {
                         modifier = Modifier.size(64.dp)
                     )
                 }
-                if (isRead) {
+                if (article.isRead.value) {
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,

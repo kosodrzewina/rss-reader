@@ -148,7 +148,7 @@ fun LoginScreen(
     }
 }
 
-fun onRegister(
+private fun onRegister(
     login: String,
     password: String,
     auth: FirebaseAuth,
@@ -166,7 +166,7 @@ fun onRegister(
         }
 }
 
-fun onLogin(
+private fun onLogin(
     login: String,
     password: String,
     auth: FirebaseAuth,

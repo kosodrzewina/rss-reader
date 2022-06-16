@@ -3,6 +3,8 @@ package com.example.rssreader.screens.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.rssreader.ArticleFetcher
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,7 @@ class ArticleListViewModel : ViewModel() {
     val isRefreshing: StateFlow<Boolean>
         get() = _isRefreshing.asStateFlow()
 
-    fun refresh() {
+    fun refresh(auth: FirebaseAuth, database: FirebaseDatabase) {
         viewModelScope.launch {
             _isRefreshing.emit(true)
             withContext(CoroutineScope(IO).coroutineContext) {

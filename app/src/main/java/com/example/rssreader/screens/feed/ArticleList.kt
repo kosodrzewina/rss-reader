@@ -17,17 +17,19 @@ import com.example.rssreader.ArticleStore
 import com.example.rssreader.EmptyView
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
-fun ArticleList(modifier: Modifier = Modifier) {
+fun ArticleList(auth: FirebaseAuth, database: FirebaseDatabase, modifier: Modifier = Modifier) {
     val viewModel: ArticleListViewModel = viewModel()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    viewModel.refresh()
+    viewModel.refresh(auth, database)
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { viewModel.refresh() }) {
+        onRefresh = { viewModel.refresh(auth, database) }) {
         if (ArticleStore.articles.isEmpty()) {
             EmptyView(
                 modifier = modifier
@@ -41,7 +43,7 @@ fun ArticleList(modifier: Modifier = Modifier) {
                 modifier = modifier
             ) {
                 items(items = ArticleStore.articles) {
-                    ArticleListItem(it)
+                    ArticleListItem(it, auth, database)
                 }
             }
         }
