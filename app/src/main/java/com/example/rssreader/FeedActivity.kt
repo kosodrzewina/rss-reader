@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.rssreader.screens.FeedScreen
+import com.example.rssreader.screens.feed.FeedScreen
 import com.example.rssreader.ui.theme.RSSReaderTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
