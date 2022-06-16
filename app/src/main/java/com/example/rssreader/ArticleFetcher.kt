@@ -31,7 +31,8 @@ object ArticleFetcher {
                             title = it.title!!,
                             description = it.description!!,
                             linkArticle = it.link!!,
-                            linkImage = it.thumbnail!!
+                            linkImage = it.thumbnail!!,
+                            isRead = false
                         )
                     }
 

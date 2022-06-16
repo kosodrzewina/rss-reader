@@ -38,7 +38,7 @@ fun FeedScreen() {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(items = ArticleStore.articles) {
-                    ArticleListItem(it, {})
+                    ArticleListItem(it)
                 }
             }
         }

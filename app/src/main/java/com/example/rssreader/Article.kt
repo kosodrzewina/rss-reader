@@ -4,5 +4,6 @@ data class Article(
     val title: String,
     val description: String,
     val linkArticle: String,
-    val linkImage: String
+    val linkImage: String,
+    var isRead: Boolean
 )
