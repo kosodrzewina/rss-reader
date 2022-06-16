@@ -40,6 +40,10 @@ fun LoginScreen(
     mainActivity: MainActivity,
     navHostController: NavHostController
 ) {
+    if (auth.currentUser != null) {
+        goToFeed(mainActivity)
+    }
+
     var loginValue by remember {
         mutableStateOf("")
     }
