@@ -20,7 +20,7 @@ class FeedActivity : ComponentActivity() {
 
         setContent {
             RSSReaderTheme {
-                FeedScreen()
+                FeedScreen(auth, this)
             }
         }
     }

@@ -1,46 +1,42 @@
 package com.example.rssreader.screens.feed
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import android.content.Intent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.rssreader.ArticleStore
-import com.example.rssreader.EmptyView
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.example.rssreader.FeedActivity
+import com.example.rssreader.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun FeedScreen() {
-    val viewModel: FeedScreenViewModel = viewModel()
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
-
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { viewModel.refresh() }) {
-        if (ArticleStore.articles.isEmpty()) {
-            EmptyView(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            )
-        } else {
-            LazyColumn(
-                contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(items = ArticleStore.articles) {
-                    ArticleListItem(it)
+fun FeedScreen(auth: FirebaseAuth, feedActivity: FeedActivity) {
+    Scaffold(
+        scaffoldState = rememberScaffoldState(),
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Articles") },
+                actions = {
+                    IconButton(
+                        onClick = {
+                            auth.signOut()
+                            feedActivity.startActivity(
+                                Intent(
+                                    feedActivity,
+                                    MainActivity::class.java
+                                )
+                            )
+                            feedActivity.finish()
+                        }
+                    ) {
+                        Icon(imageVector = Icons.Default.Logout, contentDescription = null)
+                    }
                 }
-            }
+            )
         }
+    ) {
+        ArticleList(modifier = Modifier.padding(top = it.calculateTopPadding()))
     }
 }

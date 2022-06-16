@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.rssreader.Article
+import com.example.rssreader.ArticleStore
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -34,8 +35,8 @@ fun ArticleListItem(article: Article) {
         shape = RoundedCornerShape(16.dp),
         elevation = 8.dp,
         onClick = {
-            isRead = true
             article.isRead = true
+            isRead = true
         },
         backgroundColor = if (isRead) Color(0xFFBEBEBE) else Color.White
     ) {
