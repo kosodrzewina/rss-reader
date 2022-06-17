@@ -19,7 +19,7 @@ fun FeedScreen(auth: FirebaseAuth, database: FirebaseDatabase, feedActivity: Fee
         scaffoldState = rememberScaffoldState(),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Articles") },
+                title = { Text(text = "Hello, ${auth.currentUser?.email}!") },
                 actions = {
                     IconButton(
                         onClick = {

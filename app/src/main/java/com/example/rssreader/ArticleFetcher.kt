@@ -7,6 +7,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import java.net.URL
 
+private const val TAG = "ARTICLE_FETCHER"
+
 object ArticleFetcher {
     private const val BASE_URL = "https://api.rss2json.com/v1/api.json"
     private const val BASE_URL_RSS = "$BASE_URL?rss_url="
@@ -37,15 +39,15 @@ object ArticleFetcher {
                         )
                     }
 
+            val newArticles = mutableListOf<Article>()
             articles.forEach { fetchedArticle ->
-                if (
-                    !ArticleStore.articles.any { article ->
+                if (!ArticleStore.articles.any { article ->
                         article.title == fetchedArticle.title
-                    }
-                ) {
-                    ArticleStore.articles.add(fetchedArticle)
+                    }) {
+                    newArticles.add(fetchedArticle)
                 }
             }
+            ArticleStore.articles.addAll(newArticles)
         }
     }
 }

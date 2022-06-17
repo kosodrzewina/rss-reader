@@ -27,17 +27,19 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
             goBackToLogin()
         }
 
-        setupFirebaseDb()
-
         setContent {
             RSSReaderTheme {
                 FeedScreen(auth, database, this)
             }
         }
+
+        setupFirebaseDb()
     }
 
     private fun setupFirebaseDb() {
-        val feed = database.getReference("article")
+        val encodedUserEmail =
+            Base64.encodeToString(auth.currentUser?.email?.toByteArray(), Base64.NO_WRAP)
+        val feed = database.getReference(encodedUserEmail)
 
         feed.addValueEventListener(this)
     }
@@ -48,10 +50,7 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
     }
 
     override fun onDataChange(snapshot: DataSnapshot) {
-        val encodedUserEmail =
-            Base64.encodeToString(auth.currentUser?.email?.toByteArray(), Base64.NO_WRAP)
-
-        snapshot.child(encodedUserEmail).children.forEach { dataSnapshot ->
+        snapshot.children.forEach { dataSnapshot ->
             val title = String(Base64.decode(dataSnapshot.key, Base64.NO_WRAP))
             val isRead = dataSnapshot.value as Boolean
 
