@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.rssreader.ArticleStore
 import com.example.rssreader.EmptyView
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -21,7 +22,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 @Composable
-fun ArticleList(auth: FirebaseAuth, database: FirebaseDatabase, modifier: Modifier = Modifier) {
+fun ArticleList(
+    auth: FirebaseAuth,
+    database: FirebaseDatabase,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
     val viewModel: ArticleListViewModel = viewModel()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
@@ -43,7 +49,7 @@ fun ArticleList(auth: FirebaseAuth, database: FirebaseDatabase, modifier: Modifi
                 modifier = modifier
             ) {
                 items(items = ArticleStore.articles) {
-                    ArticleListItem(it, auth, database)
+                    ArticleListItem(it, auth, database, navController)
                 }
             }
         }

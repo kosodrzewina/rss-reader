@@ -6,7 +6,9 @@ import android.util.Base64
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.rssreader.screens.feed.FeedScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.rssreader.navigation.NavGraph
 import com.example.rssreader.ui.theme.RSSReaderTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -18,6 +20,7 @@ import com.google.firebase.ktx.Firebase
 private const val TAG = "FEED_ACTIVITY"
 
 class FeedActivity : ComponentActivity(), ValueEventListener {
+    private lateinit var navHostController: NavHostController
     private val auth by lazy { Firebase.auth }
     private val database by lazy { Firebase.database }
 
@@ -29,7 +32,8 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
 
         setContent {
             RSSReaderTheme {
-                FeedScreen(auth, database, this)
+                navHostController = rememberNavController()
+                NavGraph(navHostController, auth, database, this)
             }
         }
 
@@ -54,9 +58,13 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
             val title = String(Base64.decode(dataSnapshot.key, Base64.NO_WRAP))
             val isRead = dataSnapshot.value as Boolean
 
-            ArticleStore.articles.first { article ->
-                article.title == title
-            }.isRead.value = isRead
+            try {
+                ArticleStore.articles.first { article ->
+                    article.title == title
+                }.isRead.value = isRead
+            } catch (e: NoSuchElementException) {
+                Log.e(TAG, e.toString())
+            }
         }
     }
 

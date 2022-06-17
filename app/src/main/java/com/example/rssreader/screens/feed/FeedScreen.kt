@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.example.rssreader.ArticleStore
 import com.example.rssreader.FeedActivity
 import com.example.rssreader.MainActivity
@@ -14,7 +15,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 @Composable
-fun FeedScreen(auth: FirebaseAuth, database: FirebaseDatabase, feedActivity: FeedActivity) {
+fun FeedScreen(
+    auth: FirebaseAuth,
+    database: FirebaseDatabase,
+    feedActivity: FeedActivity,
+    navController: NavController
+) {
     Scaffold(
         scaffoldState = rememberScaffoldState(),
         topBar = {
@@ -43,6 +49,7 @@ fun FeedScreen(auth: FirebaseAuth, database: FirebaseDatabase, feedActivity: Fee
         ArticleList(
             auth = auth,
             database = database,
+            navController = navController,
             modifier = Modifier.padding(top = it.calculateTopPadding())
         )
     }

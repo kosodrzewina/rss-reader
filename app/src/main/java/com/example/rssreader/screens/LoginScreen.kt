@@ -26,7 +26,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.rssreader.FeedActivity
 import com.example.rssreader.MainActivity
 import com.example.rssreader.R
@@ -36,9 +35,7 @@ const val TAG = "LOGIN_SCREEN"
 
 @Composable
 fun LoginScreen(
-    auth: FirebaseAuth,
-    mainActivity: MainActivity,
-    navHostController: NavHostController
+    auth: FirebaseAuth, mainActivity: MainActivity,
 ) {
     if (auth.currentUser != null) {
         goToFeed(mainActivity)

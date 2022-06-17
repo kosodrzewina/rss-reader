@@ -21,14 +21,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.rssreader.Article
+import com.example.rssreader.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ArticleListItem(article: Article, auth: FirebaseAuth, database: FirebaseDatabase) {
+fun ArticleListItem(
+    article: Article,
+    auth: FirebaseAuth,
+    database: FirebaseDatabase,
+    navController: NavController
+) {
     Card(
         shape = RoundedCornerShape(16.dp),
         elevation = 8.dp,
@@ -40,6 +49,15 @@ fun ArticleListItem(article: Article, auth: FirebaseAuth, database: FirebaseData
             val encodedTitle = Base64.encodeToString(article.title.toByteArray(), Base64.NO_WRAP)
             database.getReference(encodedUserEmail).child(encodedTitle)
                 .setValue(article.isRead.value)
+            val encodedLink =
+                URLEncoder.encode(article.linkArticle, StandardCharsets.UTF_8.toString())
+
+            navController.navigate(
+                Screen.ArticleWebViewScreen.routeWithArgs(
+                    article.title,
+                    encodedLink
+                )
+            )
         },
         backgroundColor = if (article.isRead.value) Color(0xFFBEBEBE) else Color.White
     ) {
