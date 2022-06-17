@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.rssreader.ArticleStore
 import com.example.rssreader.EmptyView
+import com.example.rssreader.FeedActivity
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.google.firebase.auth.FirebaseAuth
@@ -26,16 +27,17 @@ fun ArticleList(
     auth: FirebaseAuth,
     database: FirebaseDatabase,
     navController: NavController,
+    feedActivity: FeedActivity,
     modifier: Modifier = Modifier
 ) {
     val viewModel: ArticleListViewModel = viewModel()
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
-    viewModel.refresh(auth, database)
+    viewModel.refresh(feedActivity)
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { viewModel.refresh(auth, database) }) {
+        onRefresh = { viewModel.refresh(feedActivity) }) {
         if (ArticleStore.articles.isEmpty()) {
             EmptyView(
                 modifier = modifier

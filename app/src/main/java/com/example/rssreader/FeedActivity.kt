@@ -1,5 +1,6 @@
 package com.example.rssreader
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
@@ -23,7 +24,9 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
     private lateinit var navHostController: NavHostController
     private val auth by lazy { Firebase.auth }
     private val database by lazy { Firebase.database }
+    var dbSettedUp = false
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (auth.currentUser == null) {
@@ -36,11 +39,9 @@ class FeedActivity : ComponentActivity(), ValueEventListener {
                 NavGraph(navHostController, auth, database, this)
             }
         }
-
-        setupFirebaseDb()
     }
 
-    private fun setupFirebaseDb() {
+    fun setupFirebaseDb() {
         val encodedUserEmail =
             Base64.encodeToString(auth.currentUser?.email?.toByteArray(), Base64.NO_WRAP)
         val feed = database.getReference(encodedUserEmail)

@@ -57,6 +57,7 @@ fun FeedScreen(
             auth = auth,
             database = database,
             navController = navController,
+            feedActivity = feedActivity,
             modifier = Modifier.padding(top = it.calculateTopPadding())
         )
     }

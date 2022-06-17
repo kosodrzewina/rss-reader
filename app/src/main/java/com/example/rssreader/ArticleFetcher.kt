@@ -13,7 +13,7 @@ object ArticleFetcher {
     private const val BASE_URL = "https://api.rss2json.com/v1/api.json"
     private const val BASE_URL_RSS = "$BASE_URL?rss_url="
 
-    suspend fun fetch() {
+    suspend fun fetch(feedActivity: FeedActivity) {
         withContext(IO) {
             val response =
                 URL(
@@ -48,6 +48,11 @@ object ArticleFetcher {
                 }
             }
             ArticleStore.articles.addAll(newArticles)
+
+            if (!feedActivity.dbSettedUp) {
+                feedActivity.setupFirebaseDb()
+                feedActivity.dbSettedUp = true
+            }
         }
     }
 }
