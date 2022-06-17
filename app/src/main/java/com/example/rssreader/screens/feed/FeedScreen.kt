@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import com.example.rssreader.ArticleStore
 import com.example.rssreader.FeedActivity
@@ -25,7 +26,13 @@ fun FeedScreen(
         scaffoldState = rememberScaffoldState(),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Hello, ${auth.currentUser?.email}!") },
+                title = {
+                    Text(
+                        text = "Hello, ${auth.currentUser?.email}!",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
                 actions = {
                     IconButton(
                         onClick = {
